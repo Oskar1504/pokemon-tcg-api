@@ -6,6 +6,7 @@ const dataPath = "./server/data/sets/"
 module.exports = class Set{
     constructor(name, dataTable){
         this.name = name
+        this.created = new Date().getTime()
         this.cards = this.parseDataTable(dataTable)
         this.saveToFile()
     }
@@ -32,6 +33,7 @@ module.exports = class Set{
 
     loadFromCache(){
         let inData = JSON.parse(fs.readFileSync(`${dataPath}${this.name}.json`))
+        this.created = inData.created
         return inData.cards
     }
 }

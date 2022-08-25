@@ -6,9 +6,10 @@ It scraps data from https://limitlesstcg.com and parse it into .json files.
 
 Ones the Data scraped the expressJS api delivers the .json files.
 
-### WIP
-- You can specify after how much seconds/houers the data files gets invalidated and needs to be scraped again. This is only usefull if u need the prices for the cards.
+- You can specify after how much seconds/houers the data files gets invalidated and needs to be scraped again. 
+    - This is only usefull if u need the prices for the cards.
 - you can specify the language in ``.env``
+    - available are:  de | en | fr | it | es | pt
 
 ## Howto
 - specify sets to be scraped in ``/server/data/setcodes.json``

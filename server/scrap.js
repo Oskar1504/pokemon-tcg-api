@@ -19,7 +19,6 @@ async function loadSets(){
     for(let scrapSet of scrapSets){
 
         if(!fs.existsSync(`${dataPath}${scrapSet}.json`)){
-
             let htmlstring = ""
             if(!fs.existsSync(`${dataHtmlPath}${scrapSet}.html`)){
 
@@ -29,7 +28,7 @@ async function loadSets(){
 
                 htmlstring = await axios({
                     method: "get",
-                    url:`https://limitlesstcg.com/cards/de/${scrapSet}?display=list`
+                    url:`https://limitlesstcg.com/cards/${process.env.CARD_LANGUAGE}/${scrapSet}?display=list`
                 })
                 .then(response => {
                     fs.writeFileSync(`./server/data/html/${scrapSet}.html`, response.data)
@@ -47,8 +46,34 @@ async function loadSets(){
             Sets.push(new Set(scrapSet, root.querySelector("main table.data-table")))
 
         }else{
-            Sets.push(new Set(scrapSet, null))
-            console.log("Load setData from cache")
+            
+            let setData = JSON.parse(fs.readFileSync(`${dataPath}${scrapSet}.json`))
+            if((new Date().getTime() - setData.created) > (process.env.MAX_FILE_CACHE_AGE * 1000)){
+
+                console.log(`${scrapSet} scrap more than ${process.env.MAX_FILE_CACHE_AGE} sec away. Rescrapping`)
+
+                let scrapDelay = randomIntFromInterval(process.env.SCRAP_MIN_DELAY, process.env.SCRAP_MAX_DELAY)
+                console.log("Waitng for " + scrapDelay + " seconds")
+                await new Promise(resolve => setTimeout(resolve, (scrapDelay * 1000)));
+
+                htmlstring = await axios({
+                    method: "get",
+                    url:`https://limitlesstcg.com/cards/${process.env.CARD_LANGUAGE}/${scrapSet}?display=list`
+                })
+                .then(response => {
+                    fs.writeFileSync(`./server/data/html/${scrapSet}.html`, response.data)
+                    console.log(`Copied html for set "${scrapSet}"`)
+                    return response.data
+                })
+                let root = HTMLParser.parse(htmlstring);
+
+                Sets.push(new Set(scrapSet, root.querySelector("main table.data-table")))
+            }else{
+
+                Sets.push(new Set(scrapSet, null))
+                console.log("Load setData from cache")
+            }
+
         }
 
     }
