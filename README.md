@@ -18,6 +18,7 @@ Ones the Data scraped the expressJS api delivers the .json files.
     - you can also reduce the delay between each request to speed up the process
         - be carefull you can mybe get softbanned from the website when delay to short
 - specify/edit ``.env`` file to your needs
+    - if ``.env`` not exist copy ``.env-template`` and rename
 - after the script finished run `npm run start`
 
 
