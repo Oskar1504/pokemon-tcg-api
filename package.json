@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scrap": "node ./server/scrap.js"
+    "scrap": "node ./server/scrap.js",
+    "start": "node ./server/app.js",
+    "dev": "nodemon ./server/app.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "node-html-parser": "^5.4.2-0"
+    "node-html-parser": "^5.4.2-0",
+    "nodemon": "^2.0.19"
   }
 }

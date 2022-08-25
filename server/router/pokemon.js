@@ -40,4 +40,35 @@ router.get('/pokemon/*/*', async (req, res) => {
     }
 })
 
+router.post('/pokemon/getList', async (req, res) => {
+    try{
+        let sets = {}
+        let cardList = req.body.cardList.map(card => {
+            let cardSet = card.split("-")[0].toUpperCase()
+            let cardNumber = card.split("-")[1]
+            
+            if(!sets[cardSet]){
+                sets[cardSet] = JSON.parse(fs.readFileSync(`./server/data/sets/${cardSet}.json`))
+            }
+
+            if(sets[cardSet].cards.length - 1 >= cardNumber){
+                return sets[cardSet].cards[parseInt(cardNumber)]
+            }else{
+                return {name: `Cant resolve ${card}. Set ${cardSet} only contains ${sets[cardSet].cards.length-1} cards`}
+            }
+        })
+
+        if(req.body.filterAttributes){
+            cardList = cardList.map(card => {
+                return Object.fromEntries(Object.entries(card).filter(keyval => req.body.filterAttributes.includes(keyval[0])))
+            })
+        }
+
+        res.json(Response.buildResponse(cardList))
+    }
+    catch(e){
+        res.json(Response.buildErrorResponse(e))
+    }
+})
+
 module.exports = router;
