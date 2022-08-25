@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require('express')
 
 const Response = require("./helper/Response");
+const MainAPiConnector = require("./helper/MainApiConnector");
 
 const PokemonRouter = require('./router/pokemon');
 
@@ -27,4 +28,5 @@ app.get('/', async function (req, res) {
 
 app.listen(process.env.PORT, function () {
     console.log(`${process.env.PROJECT_NAME} is running at http://localhost:${process.env.PORT}`)
+    MainAPiConnector.addApplication(app, process.env)
 })
