@@ -22,12 +22,44 @@ Ones the Data scraped the expressJS api delivers the .json files.
 
 ##  Routes
 
-| route  |  returns | example |
-|---|---|---|
-| /set/list  |  ./server/data/setcodes.json | /set/list |
-| /set/*1  |  ./server/data/sets/*1.json | /set/pgo |
-| /pokemon/*1/*2  |  ./server/data/sets/*1.json card number *2 | /pokemon/pgo/2 |
+| route  | method  |  returns | example |
+|---|---|---|---|
+| get | /set/list  |  ./server/data/setcodes.json | /set/list |
+| get | /set/*1  |  ./server/data/sets/*1.json | /set/pgo |
+| get | /pokemon/*1/*2  |  ./server/data/sets/*1.json card number *2 | /pokemon/pgo/2 |
+| post json | /pokemon/getList  |  array of card objects | /pokemon/getList |
+| post json | /pokemon/getList/sortPrice  |  sorted array of card objects | /pokemon/getList/sortPrice |
 
+
+## post example
+``/pokemon/getList``
+request body type json
+```json
+{
+	"cardList":[            // required
+		"pgo-2",
+		"PGO-8228",
+		"Cre-21"
+	],
+	"filterAttributes": [   // optional
+		"set",
+		"number",
+		"name",
+		"price"
+	]
+}
+```
+``/pokemon/getList/sortPrice``
+request body type json
+```json
+{
+	"cardList":[        // required
+		"pgo-2",
+		"PGO-8228",
+		"Cre-21"
+	]
+}
+```
 
 ## more Config
 - to force rescraping delete all files in ``./server/data/html/`` and ``./server/data/html/``
@@ -54,6 +86,7 @@ Ones the Data scraped the expressJS api delivers the .json files.
             },
             "image": "https://limitlesstcg.nyc3.digitaloceanspaces.com/tpci/AOR/AOR_001_R_DE_XS.png"
         },
+        ...
     ]
 }
 ```

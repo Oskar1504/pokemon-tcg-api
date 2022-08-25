@@ -71,4 +71,45 @@ router.post('/pokemon/getList', async (req, res) => {
     }
 })
 
+
+router.post('/pokemon/getList/sortPrice', async (req, res) => {
+    try{
+        let sets = {}
+        let invalidCards = []
+        let cardList = req.body.cardList.map(card => {
+            let cardSet = card.split("-")[0].toUpperCase()
+            let cardNumber = card.split("-")[1]
+            
+            if(!sets[cardSet]){
+                sets[cardSet] = JSON.parse(fs.readFileSync(`./server/data/sets/${cardSet}.json`))
+            }
+
+            if(sets[cardSet].cards.length - 1 >= cardNumber){
+                return sets[cardSet].cards[parseInt(cardNumber)]
+            }else{
+                return {type: "error", name: `Cant resolve ${card}. Set ${cardSet} only contains ${sets[cardSet].cards.length-1} cards`}
+            }
+        })
+        .map(card => {
+            if(card.type != "error"){
+                card.price["parsedeur"] = parseFloat(card.price.eur)
+                delete card.image
+                return  card
+            }else{
+                invalidCards.push(card)
+            }
+        })
+        .filter(card => card != null)
+        .sort((b,a) => a.price.parsedeur - b.price.parsedeur)
+
+        res.json(Response.buildResponse({
+            cardList: cardList,
+            invalidCards: invalidCards
+        }))
+    }
+    catch(e){
+        res.json(Response.buildErrorResponse(e))
+    }
+})
+
 module.exports = router;
