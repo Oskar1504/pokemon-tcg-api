@@ -11,6 +11,15 @@ Ones the Data scraped the expressJS api delivers the .json files.
 - you can specify the language in ``.env``
     - available are:  de | en | fr | it | es | pt
 
+
+### Live demo
+
+https://oskar1504.ngrok.io/pokemon-tcg-api/set/pgo
+> returns PGO cardlist
+
+https://oskar1504.ngrok.io/pokemon-tcg-api/pokemon/pgo/2
+> returns PGO-2 (the second pokemon)
+
 ## Howto
 - specify sets to be scraped in ``/server/data/setcodes.json``
 - run `npm run scrap`
