@@ -29,8 +29,9 @@ router.get('/pokemon/*/*', async (req, res) => {
         let setname = req.url.split("/")[2].toUpperCase()
         let id = req.url.split("/")[3]
         let set = JSON.parse(fs.readFileSync(`./server/data/sets/${setname}.json`))
+
         if(set.cards.length - 1 >= id){
-            res.json(Response.buildResponse(set.cards[parseInt(id)]))
+            res.json(Response.buildResponse(set.cards.filter(card => parseInt(card.number) == id)))
         }else{
             throw `Set "${setname}" only contains ${set.cards.length-1} cards`
         }
@@ -52,11 +53,11 @@ router.post('/pokemon/getList', async (req, res) => {
             }
 
             if(sets[cardSet].cards.length - 1 >= cardNumber){
-                return sets[cardSet].cards[parseInt(cardNumber)]
+                return sets[cardSet].cards.filter(card => parseInt(card.number) == cardNumber)
             }else{
                 return {name: `Cant resolve ${card}. Set ${cardSet} only contains ${sets[cardSet].cards.length-1} cards`}
             }
-        })
+        }).flat()
 
         if(req.body.filterAttributes){
             cardList = cardList.map(card => {
@@ -85,11 +86,12 @@ router.post('/pokemon/getList/sortPrice', async (req, res) => {
             }
 
             if(sets[cardSet].cards.length - 1 >= cardNumber){
-                return sets[cardSet].cards[parseInt(cardNumber)]
+                return sets[cardSet].cards.filter(card => parseInt(card.number) == cardNumber)
             }else{
                 return {type: "error", name: `Cant resolve ${card}. Set ${cardSet} only contains ${sets[cardSet].cards.length-1} cards`}
             }
         })
+        .flat()
         .map(card => {
             if(card.type != "error"){
                 card.price["parsedeur"] = parseFloat(card.price.eur)
